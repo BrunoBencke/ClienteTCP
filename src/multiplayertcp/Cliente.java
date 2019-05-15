@@ -83,10 +83,6 @@ public class Cliente{
                     for (int i = 0; i < placar.length; i++) {
                         System.out.println(placar[i]);
                     }
-                } else if(respServidor.equals("GANHOU")){
-                    System.out.println("Você Ganhou" + respServidor);
-                }else if(respServidor.equals("PERDEU")){
-                    System.out.println("Você Perdeu" + respServidor);
                 }
             } while (!mandarServidor.equalsIgnoreCase("sair"));
 
@@ -94,23 +90,31 @@ public class Cliente{
     }
     
     public static void imprimeMatriz(String respServidor) throws IOException {
-        out.println("matriz");
-        respServidor = in.readLine();
-        try {
-            if (linha == 0) {
-                System.out.println(respServidor + "\n\n");
-            } else {
-                int size = 0;//linha * coluna
-                for (int i = 0; i < linha; i++) {
-                    for (int j = 0; j < coluna; j++) {
-                        System.out.print("  " + respServidor.charAt(size));
-                        size++;
+        if (respServidor.equals("GANHOU")) {
+            System.out.println("Você Ganhou!!!\n"
+                    + "Digite iniciar para comecar uma nova partida!");
+        } else if (respServidor.equals("PERDEU")) {
+            System.out.println("Você Perdeu!!!\n"
+                    + "Digite iniciar para comecar uma nova partida!");
+        } else {
+            out.println("matriz");
+            respServidor = in.readLine();
+            try {
+                if (linha == 0) {
+                    System.out.println(respServidor + "\n\n");
+                } else {
+                    int size = 0;//linha * coluna
+                    for (int i = 0; i < linha; i++) {
+                        for (int j = 0; j < coluna; j++) {
+                            System.out.print("  " + respServidor.charAt(size));
+                            size++;
+                        }
+                        System.out.println("");
                     }
-                    System.out.println("");
                 }
+            } catch (Exception e) {
+                System.out.println(e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 }
