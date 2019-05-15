@@ -1,6 +1,4 @@
 package multiplayertcp;
-
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -24,16 +22,15 @@ public class ServerPlayer extends Thread {
     public void initialize() {
         String[] array = ServerGame.ramdonPositionUser();
         this.simbol = array[0];
-        this.posR = Integer.parseInt(array[1]);
-        this.posC = Integer.parseInt(array[2]);
+//        this.posR = Integer.parseInt(array[1]);
+//        this.posC = Integer.parseInt(array[2]);
     }
     
     public String move(String move){
         String[] array = ServerGame.moveHero(simbol, move, posR, posC);
         
-        this.posR = Integer.parseInt(array[1]);
-        this.posC = Integer.parseInt(array[2]);
-        System.out.println("R="+posR+"|C="+posC);
+//        this.posR = Integer.parseInt(array[1]);
+//        this.posC = Integer.parseInt(array[2]);
         return array[0];
     }
     
@@ -59,6 +56,18 @@ public class ServerPlayer extends Thread {
             
             while (repeat) {
                 
+                if(true){
+                    String[][] matriz = ServerGame.getFieldArray();
+                    for (int i = 0; i < matriz.length; i++) {
+                        for (int j = 0; j < matriz[i].length; j++) {
+                            if(matriz[i][j].equalsIgnoreCase(simbol)){
+                                posR = i;
+                                posC = j;
+                            }
+                        }
+                    }
+                }
+                
                 data = in.readLine();
                 dataSend = "";
                 System.out.println("Client request: " + simbol + " -> " + data);
@@ -66,6 +75,7 @@ public class ServerPlayer extends Thread {
                 if (data.equalsIgnoreCase("sair") || data.equalsIgnoreCase("sair\r\n")) {
                     dataSend = "tchau - " + simbol;
                     repeat = false;
+                    exit();
                 } else if (data.equalsIgnoreCase("mov_cima") || data.equalsIgnoreCase("mov_cima\r\n")) {
                     dataSend = move(data);
                 } else if (data.equalsIgnoreCase("mov_baixo") || data.equalsIgnoreCase("mov_baixo\r\n")) {
@@ -84,22 +94,12 @@ public class ServerPlayer extends Thread {
                     dataSend = ServerGame.getScoreboard();
                 }
                 
-                if(true){
-                    String[][] matriz = ServerGame.getFieldArray();
-                    for (int i = 0; i < matriz.length; i++) {
-                        for (int j = 0; j < matriz[i].length; j++) {
-                            if(matriz[i][j].equalsIgnoreCase(simbol)){
-                                posR = i;
-                                posC = j;
-                            }
-                        }
-                    }
-                }
+                
                 
                 out.println(dataSend);
                 System.out.println("\n\tSistema: Enviou algo para - " +  simbol + "\n\n" + dataSend);
             }
-
+            
             socket.close();
 
         } catch (Exception e) {

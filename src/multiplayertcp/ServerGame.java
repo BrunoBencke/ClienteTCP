@@ -1,6 +1,4 @@
 package multiplayertcp;
-
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.TreeMap;
@@ -78,7 +76,7 @@ public class ServerGame {
     public static String getScoreboard(){
         String score = "";
         for (String s : users.keySet()){
-            score += s + ";" + usersWin.get(s) + ";" + usersFail.get(s) + "|";
+            score += s + ";" + usersWin.get(s) + ";" + usersFail.get(s) + "/";
         }
         return score;
     }
@@ -129,8 +127,12 @@ public class ServerGame {
         //reseta a vida dos jogadores
         setAllUsers(true);
         
+//        System.out.println(getField());
+//        int out = 1;
         for(String s : users.keySet()){
             ramdonAllPositionUser(s);
+//            System.out.println("#####################"+out );
+//            out++;
         }
         
         System.out.println("Sistema: Campo Criado");
@@ -148,11 +150,17 @@ public class ServerGame {
             temp = field[row][column];
             if (temp.equals(".")) {
                 field[row][column] = simbol;
+//                System.out.println("#############123456 :>" + temp);
                 valid = true;
             } else {
                 valid = false;
             }
         } while (!valid);
+        
+//        for (String s : users.keySet()) {
+//            System.out.println(s);
+//        }
+        
     }
 
     public static String[] ramdonPositionUser(/*String user*/) {
@@ -198,6 +206,7 @@ public class ServerGame {
         //reseta a vida dos jogadores
         if (users.size() > 0) {
             for (String s : users.keySet()) {
+//                users.remove(s);
                 users.put(s, live);
             }
         }
@@ -218,7 +227,7 @@ public class ServerGame {
                 }
             }
         } else if (move.equals("mov_baixo")) {
-            if (posR < SIZE_ROW) {
+            if (posR < SIZE_ROW-1) {
                 s = managerLive(simbol, posR + 1, posC);
                 if (users.get(simbol)) {
                     field[posR][posC] = ".";
@@ -240,7 +249,7 @@ public class ServerGame {
                 }
             }
         } else if (move.equals("mov_direita")) {
-            if (posC < SIZE_COLUMN) {
+            if (posC < SIZE_COLUMN-1) {
                 s = managerLive(simbol, posR, posC + 1);
                 if (users.get(simbol)) {
                     field[posR][posC] = ".";
@@ -252,6 +261,10 @@ public class ServerGame {
             }
         }
         String[] array = { s, posR+"", posC+"" };
+        
+        if(s.equals("GANHOU")){
+            fillField();
+        }
         
         return array;
     }
@@ -265,13 +278,11 @@ public class ServerGame {
             usersFail.put(simbol, fail);
         } else if (field[row][column].equals("#")) {
             s = "GANHOU";
-            users.put(simbol, false);
-            int win = usersWin.get(simbol) + 1;
-            usersWin.put(simbol, win);
-
             //reseta a vida dos jogadores
             setAllUsers(false);
-            fillField();
+            
+            int win = usersWin.get(simbol) + 1;
+            usersWin.put(simbol, win);
         }
         return s;
     }
